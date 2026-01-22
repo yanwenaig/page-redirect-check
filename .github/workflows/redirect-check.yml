@@ -1,16 +1,17 @@
-name: Page Redirect & Content Check
+name: Daily Website Redirect & Content Monitor
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'   # 8am SGT (UTC+8)
   workflow_dispatch:
 
 jobs:
-  check:
+  monitor:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,5 +23,38 @@ jobs:
           pip install playwright
           playwright install chromium
 
-      - name: Run redirect check
-        run: python check_page.py
+      - name: Run page check (capture output)
+        run: |
+          python check_page.py > result.txt 2>&1 || true
+
+      - name: Detect issues
+        run: |
+          if grep -q "=== ISSUES DETECTED ===" result.txt; then
+            echo "ISSUES_FOUND=true" >> $GITHUB_ENV
+          else
+            echo "ISSUES_FOUND=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create GitHub issue if issues detected
+        if: env.ISSUES_FOUND == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('result.txt', 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Website Redirect / Content Issues Detected',
+              body: `
+Daily website monitoring completed successfully, but issues were detected.
+
+\`\`\`
+${body}
+\`\`\`
+
+Run:
+${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+              `
+            });
