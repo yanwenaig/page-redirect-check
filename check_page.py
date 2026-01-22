@@ -50,12 +50,13 @@ def check_page(page, target):
             )
 
     # 2️⃣ Content check
-    content = page.content()
+    content = page.content().lower()
     for text in target["key_sections"]:
-        if text not in content:
-            issues.append(
-                f"MISSING CONTENT → '{text}'"
-            )
+    if text.lower() not in content:
+        issues.append(
+            f"MISSING CONTENT → '{text}'"
+        )
+
 
     return issues
 
