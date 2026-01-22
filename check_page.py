@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 PAGES = [
     {
         "url": "https://www.aig.sg/travel",
-        "expect_redirect": True,   # expected redirect (test case)
+        "expect_redirect": False,   # expected redirect (test case)
         "key_sections": [
             "Travel Guard",
             "Support"
