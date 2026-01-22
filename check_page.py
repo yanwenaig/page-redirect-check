@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 PAGES = [
     {
         "url": "https://www.aig.sg/travel",
-        "expect_redirect": True,   # 🧪 expected redirect (test case)
+        "expect_redirect": True,   # expected redirect (test case)
         "key_sections": [
             "Travel Guard",
             "Support"
@@ -30,12 +30,13 @@ PAGES = [
 def check_page(page, target):
     issues = []
 
+    # Load page and allow JS to run
     page.goto(target["url"], wait_until="domcontentloaded")
     page.wait_for_timeout(6000)  # catch delayed JS redirects
 
     redirected = page.url != target["url"]
 
-    # 1️⃣ Redirect detection & validation
+    # Redirect detection
     if redirected:
         print(f"REDIRECT DETECTED → {target['url']} → {page.url}")
 
@@ -49,14 +50,14 @@ def check_page(page, target):
                 f"EXPECTED REDIRECT DID NOT OCCUR → {target['url']}"
             )
 
-    # 2️⃣ Content check
+    # Content check (case-insensitive)
     content = page.content().lower()
-    for text in target["key_sections"]:
-    if text.lower() not in content:
-        issues.append(
-            f"MISSING CONTENT → '{text}'"
-        )
 
+    for text in target["key_sections"]:
+        if text.lower() not in content:
+            issues.append(
+                f"MISSING CONTENT → '{text}'"
+            )
 
     return issues
 
@@ -76,7 +77,7 @@ with sync_playwright() as p:
 
     browser.close()
 
-# 3️⃣ Final summary + alert trigger
+# Final summary + alert trigger
 if all_issues:
     print("\n=== ISSUES DETECTED ===")
     for url, issues in all_issues.items():
