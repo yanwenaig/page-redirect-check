@@ -26,7 +26,7 @@ PAGES = [
 ]
 
 def check_page(page, target):
-    page.goto(target["url"], wait_until="networkidle")
+    page.goto(target["url"], wait_until="domcontentloaded")
     page.wait_for_timeout(4000)  # catch delayed JS redirects
 
     # 1️⃣ Redirect check
