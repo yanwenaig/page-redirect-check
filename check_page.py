@@ -18,6 +18,10 @@ PAGES = [
         ]
     },
     {
+        "url": "https://www.zurich.com.hk/zh-hk/products/travel/aig-redirect?utm_source=aig&utm_medium=referral&utm_campaign=travelredirect",
+        "expect_redirect": False
+    },
+    {
         "url": "https://www.travelguard.com.sg/global-markets",
         "expect_redirect": False,
         "key_sections": [
