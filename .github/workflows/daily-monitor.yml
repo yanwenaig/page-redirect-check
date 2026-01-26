@@ -1,0 +1,27 @@
+name: Daily Website Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # temporary test
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Run checks
+        run: python check_page.py
