@@ -4,18 +4,12 @@ PAGES = [
     {
         "url": "https://www.aig.sg/travel",
         "expect_redirect": False,
-        "key_sections": [
-            "Travel Guard",
-            "Support"
-        ]
+        "key_sections": ["Travel Guard", "Support"]
     },
     {
         "url": "https://www.aig.sg/home/solutions/personal/home-insurance",
         "expect_redirect": False,
-        "key_sections": [
-            "Current Promotion",
-            "Customer Reviews"
-        ]
+        "key_sections": ["Current Promotion", "Customer Reviews"]
     },
     {
         "url": "https://www.zurich.com.hk/zh-hk/products/travel/aig-redirect?utm_source=aig&utm_medium=referral&utm_campaign=travelredirect",
@@ -24,10 +18,7 @@ PAGES = [
     {
         "url": "https://www.travelguard.com.sg/global-markets",
         "expect_redirect": False,
-        "key_sections": [
-            "Travel Guard",
-            "Important Information"
-        ]
+        "key_sections": ["Travel Guard", "Important Information"]
     }
 ]
 
@@ -53,7 +44,7 @@ def check_page(page, target):
 
     content = page.content().lower()
 
-    for text in target["key_sections"]:
+    for text in target.get("key_sections", []):
         if text.lower() not in content:
             issues.append(f"MISSING CONTENT → '{text}'")
 
