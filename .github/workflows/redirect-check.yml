@@ -2,7 +2,7 @@ name: Daily Website Monitor
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 8am SGT (UTC+8)
+    - cron: '*/5 * * * *'   # every 5 minutes
   workflow_dispatch:
 
 permissions:
